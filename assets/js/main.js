@@ -48,12 +48,16 @@
   /**
    * Preloader
    */
+  window.addEventListener('load', () => {
   const preloader = document.querySelector('#preloader');
   if (preloader) {
-    window.addEventListener('load', () => {
+    preloader.style.opacity = '0';
+    setTimeout(() => {
       preloader.remove();
-    });
+    }, 600); // cocok dengan transition di CSS
   }
+});
+
 
   /**
    * Scroll top button
