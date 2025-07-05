@@ -1291,3 +1291,38 @@ section,
 .starter-section {
   /* Add your styles here */
 }
+
+#music-toggle {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  display: flex;
+  gap: 4px;
+  cursor: grab;
+  padding: 10px 14px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+#music-toggle .bar {
+  width: 4px;
+  height: 20px;
+  background-color: #00ffc3;
+  border-radius: 2px;
+  animation: equalizer 1s infinite;
+}
+
+#music-toggle .bar2 { animation-delay: 0.2s; }
+#music-toggle .bar3 { animation-delay: 0.4s; }
+
+#music-toggle.paused .bar {
+  animation: none;
+  opacity: 0.4;
+}
+
+#music-toggle:active {
+  cursor: grabbing;
+}
