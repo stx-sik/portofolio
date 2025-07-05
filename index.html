@@ -40,6 +40,18 @@
 
 <body class="index-page">
 
+  <audio id="bg-music" src="assets/audio/music.mp3" preload="auto"></audio>
+
+<div id="music-toggle" class="glass paused" onclick="toggleMusic()">
+  <span class="bar bar1"></span>
+  <span class="bar bar2"></span>
+  <span class="bar bar3"></span>
+</div>
+
+
+
+
+
   <header id="header" class="header dark-background d-flex flex-column">
     <i class="header-toggle d-xl-none bi bi-list"></i>
 
@@ -65,15 +77,15 @@
     </div>
 
     <nav id="navmenu" class="navmenu">
-      <ul>
-        <li><a href="#hero" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
-        <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
-        <li><a href="#certificates"><i class="bi bi-award navicon"></i> seritifikat</a></li>
+  <ul>
+    <li><a href="#hero" class="active"><i class="bi bi-house navicon"></i> Home</a></li>
+    <li><a href="#about"><i class="bi bi-person navicon"></i> About</a></li>
+    <li><a href="#resume"><i class="bi bi-file-earmark-text navicon"></i> Resume</a></li>
+    <li><a href="#certificates"><i class="bi bi-award navicon"></i> Sertifikat</a></li>
+    <li><a href="game.html"><i class="bi bi-controller navicon"></i> Minigame</a></li>
+  </ul>
+</nav>
 
-
-
-    </nav>
 
   </header>
 
@@ -157,6 +169,7 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
+        
         <h2>Skills</h2>
 
       </div><!-- End Section Title -->
@@ -368,5 +381,46 @@
     <script src="assets/js/main.js"></script>
 
 </body>
+
+<script>
+  const music = document.getElementById("bg-music");
+  const toggle = document.getElementById("music-toggle");
+
+  toggle.classList.add("paused");
+
+  function toggleMusic() {
+    if (music.paused) {
+      music.play();
+      toggle.classList.remove("paused");
+    } else {
+      music.pause();
+      toggle.classList.add("paused");
+    }
+  }
+
+  // === Drag logic ===
+  let isDragging = false, offsetX, offsetY;
+
+  toggle.addEventListener("mousedown", function(e) {
+    isDragging = true;
+    offsetX = e.clientX - toggle.getBoundingClientRect().left;
+    offsetY = e.clientY - toggle.getBoundingClientRect().top;
+  });
+
+  document.addEventListener("mousemove", function(e) {
+    if (isDragging) {
+      toggle.style.left = e.clientX - offsetX + "px";
+      toggle.style.top = e.clientY - offsetY + "px";
+      toggle.style.right = "auto";
+      toggle.style.bottom = "auto";
+    }
+  });
+
+  document.addEventListener("mouseup", function() {
+    isDragging = false;
+  });
+</script>
+
+
 
 </html>
