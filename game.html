@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reaction Time Game</title>
+
+  <link href="assets/img/favicon.png" rel="icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f5f5;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    #reaction-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: black;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      height: 200px;
+      background-color: #ccc;
+      margin: 20px auto;
+      max-width: 400px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    nav#navmenu {
+      text-align: left;
+      padding: 10px 30px;
+    }
+
+    nav#navmenu ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    nav#navmenu ul li a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #333;
+    }
+
+    nav#navmenu ul li a:hover {
+      color: #007bff;
+    }
+
+    /* 🎵 MUSIC ICON UI */
+    #music-toggle {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      display: flex;
+      gap: 4px;
+      cursor: grab;
+      padding: 10px 14px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+    }
+
+    #music-toggle .bar {
+      width: 4px;
+      height: 20px;
+      background-color: #00ffc3;
+      border-radius: 2px;
+      animation: equalizer 1s infinite;
+    }
+
+    #music-toggle .bar2 { animation-delay: 0.2s; }
+    #music-toggle .bar3 { animation-delay: 0.4s; }
+
+    #music-toggle.paused .bar {
+      animation: none;
+      opacity: 0.4;
+    }
+
+    #music-toggle:active {
+      cursor: grabbing;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 🔙 Navigation -->
+  <header>
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="index.html"><i class="bi bi-arrow-left navicon"></i> Kembali</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ⚡ Reaction Game -->
+  <section id="reaction-test">
+    <div class="container">
+      <h2>⚡ Reaction Time Test</h2>
+      <p>Seberapa cepat kamu bisa bereaksi? Klik secepat mungkin saat warna berubah!</p>
+      <button onclick="startReaction()" class="btn btn-outline-warning mb-3">▶️ Mulai</button>
+    </div>
+
+    <div id="reaction-box"></div>
+
+    <p id="reaction-status" class="mt-3 fw-bold"></p>
+    <p id="best-score" class="text-muted"></p>
+  </section>
+
+  <!-- 🔊 Audio + Equalizer -->
+  <audio id="bg-music" src="assets/audio/music.mp3" preload="auto"></audio>
+
+  <div id="music-toggle" class="glass paused" onclick="toggleMusic()">
+    <span class="bar bar1"></span>
+    <span class="bar bar2"></span>
+    <span class="bar bar3"></span>
+  </div>
+
+  <!-- ✅ JS Logic -->
+  <script>
+    const box = document.getElementById("reaction-box");
+    const statusText = document.getElementById("reaction-status");
+    const bestScoreText = document.getElementById("best-score");
+    const music = document.getElementById("bg-music");
+    const toggle = document.getElementById("music-toggle");
+
+    let startTime, timeoutId, gameStarted = false;
+
+    function updateBestScoreDisplay() {
+      const best = localStorage.getItem("bestReactionTime");
+      if (best) {
+        bestScoreText.innerText = `⏱️ Skor tercepat kamu: ${best} ms`;
+      } else {
+        bestScoreText.innerText = `⏱️ Belum ada skor tercepat. Ayo coba!`;
+      }
+    }
+
+    updateBestScoreDisplay();
+
+    function startReaction() {
+      box.style.backgroundColor = "#ccc";
+      box.innerText = "";
+      statusText.innerText = "Tunggu...";
+      gameStarted = false;
+
+      const delay = Math.random() * 3000 + 2000;
+
+      timeoutId = setTimeout(() => {
+        box.style.backgroundColor = "#00ff88";
+        box.innerText = "Klik sekarang!";
+        startTime = new Date().getTime();
+        gameStarted = true;
+      }, delay);
+    }
+
+    box.addEventListener("click", () => {
+      if (!gameStarted) {
+        clearTimeout(timeoutId);
+        statusText.innerText = "⛔ Terlalu cepat! Coba lagi.";
+        box.style.backgroundColor = "#f44336";
+      } else {
+        const endTime = new Date().getTime();
+        const reactionTime = endTime - startTime;
+        statusText.innerText = `⚡ Waktu reaksi kamu: ${reactionTime} ms`;
+
+        const best = localStorage.getItem("bestReactionTime");
+        if (!best || reactionTime < parseInt(best)) {
+          localStorage.setItem("bestReactionTime", reactionTime);
+          bestScoreText.innerText = `🏆 Skor baru terbaik: ${reactionTime} ms`;
+        }
+
+        box.innerText = "";
+        box.style.backgroundColor = "#2196f3";
+        gameStarted = false;
+      }
+    });
+
+    // 🎵 Musik play/pause
+    function toggleMusic() {
+      if (music.paused) {
+        music.play();
+        toggle.classList.remove("paused");
+      } else {
+        music.pause();
+        toggle.classList.add("paused");
+      }
+    }
+
+    // 🖱️ Drag UI Musik
+    let isDragging = false, offsetX, offsetY;
+
+    toggle.addEventListener("mousedown", function(e) {
+      isDragging = true;
+      offsetX = e.clientX - toggle.getBoundingClientRect().left;
+      offsetY = e.clientY - toggle.getBoundingClientRect().top;
+    });
+
+    document.addEventListener("mousemove", function(e) {
+      if (isDragging) {
+        toggle.style.left = e.clientX - offsetX + "px";
+        toggle.style.top = e.clientY - offsetY + "px";
+        toggle.style.right = "auto";
+        toggle.style.bottom = "auto";
+      }
+    });
+
+    document.addEventListener("mouseup", function() {
+      isDragging = false;
+    });
+  </script>
+</body>
+</html>
