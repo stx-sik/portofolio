@@ -1304,6 +1304,8 @@ section,
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  touch-action: none;
+  position: fixed;
   z-index: 9999;
 }
 
@@ -1326,3 +1328,8 @@ section,
 #music-toggle:active {
   cursor: grabbing;
 }
+
+
+
+
+
