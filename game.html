@@ -185,38 +185,66 @@
       }
     });
 
-    // 🎵 Musik play/pause
-    function toggleMusic() {
-      if (music.paused) {
-        music.play();
-        toggle.classList.remove("paused");
-      } else {
-        music.pause();
-        toggle.classList.add("paused");
-      }
-    }
+    
 
-    // 🖱️ Drag UI Musik
-    let isDragging = false, offsetX, offsetY;
+// Status awal
+toggle.classList.add("paused");
 
-    toggle.addEventListener("mousedown", function(e) {
-      isDragging = true;
-      offsetX = e.clientX - toggle.getBoundingClientRect().left;
-      offsetY = e.clientY - toggle.getBoundingClientRect().top;
-    });
+// Toggle play/pause musik
+function toggleMusic() {
+  if (music.paused) {
+    music.play();
+    toggle.classList.remove("paused");
+  } else {
+    music.pause();
+    toggle.classList.add("paused");
+  }
+}
 
-    document.addEventListener("mousemove", function(e) {
-      if (isDragging) {
-        toggle.style.left = e.clientX - offsetX + "px";
-        toggle.style.top = e.clientY - offsetY + "px";
-        toggle.style.right = "auto";
-        toggle.style.bottom = "auto";
-      }
-    });
+// === Drag logic (PC + HP)
+let isDragging = false, offsetX, offsetY;
 
-    document.addEventListener("mouseup", function() {
-      isDragging = false;
-    });
+// === Desktop: drag pakai mouse
+toggle.addEventListener("mousedown", function(e) {
+  isDragging = true;
+  offsetX = e.clientX - toggle.getBoundingClientRect().left;
+  offsetY = e.clientY - toggle.getBoundingClientRect().top;
+});
+
+document.addEventListener("mousemove", function(e) {
+  if (isDragging) {
+    toggle.style.left = e.clientX - offsetX + "px";
+    toggle.style.top = e.clientY - offsetY + "px";
+    toggle.style.right = "auto";
+    toggle.style.bottom = "auto";
+  }
+});
+
+document.addEventListener("mouseup", function() {
+  isDragging = false;
+});
+
+// === HP: drag pakai touch
+toggle.addEventListener("touchstart", function(e) {
+  const touch = e.touches[0];
+  isDragging = true;
+  offsetX = touch.clientX - toggle.getBoundingClientRect().left;
+  offsetY = touch.clientY - toggle.getBoundingClientRect().top;
+});
+
+document.addEventListener("touchmove", function(e) {
+  if (isDragging) {
+    const touch = e.touches[0];
+    toggle.style.left = touch.clientX - offsetX + "px";
+    toggle.style.top = touch.clientY - offsetY + "px";
+    toggle.style.right = "auto";
+    toggle.style.bottom = "auto";
+  }
+});
+
+document.addEventListener("touchend", function() {
+  isDragging = false;
+});
   </script>
 </body>
 </html>
