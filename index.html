@@ -36,9 +36,22 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+
+  <style>
+  img.protected {
+    pointer-events: none;
+    user-select: none;
+  }
+</style>
+
 </head>
 
 <body class="index-page">
+  
+
+
+  
+
 
   <audio id="bg-music" src="assets/audio/music.mp3" preload="auto"></audio>
 
@@ -56,7 +69,7 @@
     <i class="header-toggle d-xl-none bi bi-list"></i>
 
     <div class="profile-img">
-      <img src="assets/img/tubagus1.jpeg" alt="" class="img-fluid rounded-circle">
+      <img src="assets/img/tubagus1.jpeg" alt="" class="img-fluid rounded-circle protected">
     </div>
 
     <a href="index.html" class="logo d-flex align-items-center justify-content-center">
@@ -94,7 +107,8 @@
     <!-- Hero Section -->
     <section id="hero" class="hero section dark-background">
 
-      <img src="assets/img/keren.jpg" alt="" data-aos="fade-in" class="">
+      <img src="assets/img/keren.jpg" alt="galaxy" class="">
+
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
         <h2>Tubagus Khairul Zaman</h2>
@@ -127,7 +141,7 @@
 
         <div class="row gy-4 justify-content-center">
           <div class="col-lg-4">
-            <img src="assets/img/tubagus1.jpeg" class="img-fluid" alt="">
+            <img src="assets/img/tubagus1.jpeg" class="img-fluid protected" alt="">
           </div>
           <div class="col-lg-8 content">
             <h2>Siswa SMKS Tamansiswa 2 Jakarta</h2>
@@ -419,6 +433,22 @@
   document.addEventListener("mouseup", function() {
     isDragging = false;
   });
+
+   // Disable klik kanan
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+
+  // Disable drag gambar
+  document.querySelectorAll('img.protected').forEach(img => {
+    img.setAttribute('draggable', 'false');
+  });
+
+    if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    alert("📷 Screenshot tidak diperbolehkan. Harap hormati privasi.");
+  }
+
+
 </script>
 
 
