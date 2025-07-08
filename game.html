@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reaction Time Game</title>
 
-  <link href="assets/img/favicon.png" rel="icon" />
+  <link href="assets/img/apple-touch-icon.jpg" rel="icon" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
@@ -67,6 +67,7 @@
       backdrop-filter: blur(10px);
       background: rgba(255, 255, 255, 0.08);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      touch-action: none;
       z-index: 9999;
     }
 
@@ -75,7 +76,7 @@
       height: 20px;
       background-color: #00ffc3;
       border-radius: 2px;
-      animation: equalizer 1s infinite;
+      animation: equalizer 1s infinite ease-in-out;
     }
 
     #music-toggle .bar2 { animation-delay: 0.2s; }
@@ -84,6 +85,11 @@
     #music-toggle.paused .bar {
       animation: none;
       opacity: 0.4;
+    }
+
+    @keyframes equalizer {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(2); }
     }
 
     #music-toggle:active {
@@ -112,15 +118,13 @@
     </div>
 
     <div id="reaction-box"></div>
-
     <p id="reaction-status" class="mt-3 fw-bold"></p>
     <p id="best-score" class="text-muted"></p>
   </section>
 
   <!-- 🔊 Audio + Equalizer -->
   <audio id="bg-music" src="assets/audio/music.mp3" preload="auto"></audio>
-
-  <div id="music-toggle" class="glass paused" onclick="toggleMusic()">
+  <div id="music-toggle" class="paused" onclick="toggleMusic()">
     <span class="bar bar1"></span>
     <span class="bar bar2"></span>
     <span class="bar bar3"></span>
@@ -138,11 +142,9 @@
 
     function updateBestScoreDisplay() {
       const best = localStorage.getItem("bestReactionTime");
-      if (best) {
-        bestScoreText.innerText = `⏱️ Skor tercepat kamu: ${best} ms`;
-      } else {
-        bestScoreText.innerText = `⏱️ Belum ada skor tercepat. Ayo coba!`;
-      }
+      bestScoreText.innerText = best
+        ? `⏱️ Skor tercepat kamu: ${best} ms`
+        : `⏱️ Belum ada skor tercepat. Ayo coba!`;
     }
 
     updateBestScoreDisplay();
@@ -185,66 +187,61 @@
       }
     });
 
-    
-
-// Status awal
-toggle.classList.add("paused");
-
-// Toggle play/pause musik
-function toggleMusic() {
-  if (music.paused) {
-    music.play();
-    toggle.classList.remove("paused");
-  } else {
-    music.pause();
+    // === Musik Toggle
     toggle.classList.add("paused");
-  }
-}
 
-// === Drag logic (PC + HP)
-let isDragging = false, offsetX, offsetY;
+    function toggleMusic() {
+      if (music.paused) {
+        music.play();
+        toggle.classList.remove("paused");
+      } else {
+        music.pause();
+        toggle.classList.add("paused");
+      }
+    }
 
-// === Desktop: drag pakai mouse
-toggle.addEventListener("mousedown", function(e) {
-  isDragging = true;
-  offsetX = e.clientX - toggle.getBoundingClientRect().left;
-  offsetY = e.clientY - toggle.getBoundingClientRect().top;
-});
+    // === Drag logic (PC + HP)
+    let isDragging = false, offsetX, offsetY;
 
-document.addEventListener("mousemove", function(e) {
-  if (isDragging) {
-    toggle.style.left = e.clientX - offsetX + "px";
-    toggle.style.top = e.clientY - offsetY + "px";
-    toggle.style.right = "auto";
-    toggle.style.bottom = "auto";
-  }
-});
+    toggle.addEventListener("mousedown", function(e) {
+      isDragging = true;
+      offsetX = e.clientX - toggle.getBoundingClientRect().left;
+      offsetY = e.clientY - toggle.getBoundingClientRect().top;
+    });
 
-document.addEventListener("mouseup", function() {
-  isDragging = false;
-});
+    document.addEventListener("mousemove", function(e) {
+      if (isDragging) {
+        toggle.style.left = e.clientX - offsetX + "px";
+        toggle.style.top = e.clientY - offsetY + "px";
+        toggle.style.right = "auto";
+        toggle.style.bottom = "auto";
+      }
+    });
 
-// === HP: drag pakai touch
-toggle.addEventListener("touchstart", function(e) {
-  const touch = e.touches[0];
-  isDragging = true;
-  offsetX = touch.clientX - toggle.getBoundingClientRect().left;
-  offsetY = touch.clientY - toggle.getBoundingClientRect().top;
-});
+    document.addEventListener("mouseup", function() {
+      isDragging = false;
+    });
 
-document.addEventListener("touchmove", function(e) {
-  if (isDragging) {
-    const touch = e.touches[0];
-    toggle.style.left = touch.clientX - offsetX + "px";
-    toggle.style.top = touch.clientY - offsetY + "px";
-    toggle.style.right = "auto";
-    toggle.style.bottom = "auto";
-  }
-});
+    toggle.addEventListener("touchstart", function(e) {
+      const touch = e.touches[0];
+      isDragging = true;
+      offsetX = touch.clientX - toggle.getBoundingClientRect().left;
+      offsetY = touch.clientY - toggle.getBoundingClientRect().top;
+    });
 
-document.addEventListener("touchend", function() {
-  isDragging = false;
-});
+    document.addEventListener("touchmove", function(e) {
+      if (isDragging) {
+        const touch = e.touches[0];
+        toggle.style.left = touch.clientX - offsetX + "px";
+        toggle.style.top = touch.clientY - offsetY + "px";
+        toggle.style.right = "auto";
+        toggle.style.bottom = "auto";
+      }
+    });
+
+    document.addEventListener("touchend", function() {
+      isDragging = false;
+    });
   </script>
 </body>
 </html>
