@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tubagus Khairul Zaman — Junior Programmer</title>
+<meta name="description" content="Portofolio Tubagus Khairul Zaman — Junior Programmer yang gemar membangun aplikasi web dan terus belajar teknologi baru.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     DESIGN TOKENS
+  ========================================================= */
+  :root{
+    --bg: #0D1117;
+    --bg-alt: #161B22;
+    --bg-card: #1A2230;
+    --ink: #E6EDF3;
+    --ink-soft: #8B949E;
+    --accent: #3FB950;
+    --accent-dim: #3FB95022;
+    --accent-alt: #F0883E;
+    --line: #30363D;
+    --card-bg: #161B22;
+    --danger: #F85149;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+    --radius: 6px;
+    --glow: 0 0 0 1px #3FB95033, 0 8px 32px -8px #3FB95022;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  a{ color: inherit; }
+  img{ max-width:100%; display:block; }
+
+  ::selection{ background: var(--accent); color: #0D1117; }
+
+  :focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .wrap{
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* --------- NOISE OVERLAY --------- */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* --------- GRID BACKGROUND --------- */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(63,185,80,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(63,185,80,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height: 60px;
+  }
+  .logo{
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+  .logo::before{ content: "~/"; color: var(--accent); }
+  .navlinks{
+    display:flex;
+    gap: 24px;
+    list-style:none;
+    margin:0; padding:0;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+  .navlinks a{
+    text-decoration:none;
+    color: var(--ink-soft);
+    padding: 4px 0;
+    position: relative;
+    transition: color .2s;
+  }
+  .navlinks a::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform .2s;
+  }
+  .navlinks a:hover, .navlinks a:focus-visible{
+    color: var(--ink);
+  }
+  .navlinks a:hover::after, .navlinks a:focus-visible::after {
+    transform: scaleX(1);
+  }
+  @media (max-width: 600px){
+    .navlinks{ gap: 14px; font-size: 0.72rem; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding: 88px 0 64px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Radial glow behind hero */
+  .hero-glow {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(63,185,80,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid #3FB95044;
+    border-radius: 999px;
+    padding: 5px 14px;
+    margin-bottom: 24px;
+    animation: pulse-border 3s ease infinite;
+  }
+  .hero-badge .dot-live {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: dot-pulse 1.8s ease infinite;
+  }
+  @keyframes dot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  @keyframes pulse-border {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(63,185,80,0); }
+    50% { box-shadow: 0 0 0 4px rgba(63,185,80,0.08); }
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  .eyebrow::before{ content: "// "; color: var(--ink-soft); }
+
+  .terminal{
+    background: #0D1117;
+    color: #DCEFE0;
+    border-radius: var(--radius);
+    box-shadow: var(--glow), 0 24px 64px -16px rgba(0,0,0,0.6);
+    overflow: hidden;
+    border: 1px solid #30363D;
+    position: relative;
+  }
+  .terminal::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.4;
+  }
+  .terminal-bar{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #080D10;
+    border-bottom: 1px solid #21262D;
+  }
+  .dot{ width:11px; height:11px; border-radius:50%; cursor: default; }
+  .dot.r{ background:#FF5F57; }
+  .dot.y{ background:#FEBC2E; }
+  .dot.g{ background:#28C840; }
+  .terminal-title{
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: #6E7681;
+    margin: 0 auto;
+  }
+  .terminal-body{
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    padding: 22px 22px 28px;
+    min-height: 168px;
+    line-height: 1.8;
+  }
+  .term-line{ white-space: pre-wrap; word-break: break-word; margin: 0; }
+  .term-prompt{ color: #3FB950; }
+  .term-out{ color: #8B949E; margin: 0 0 12px; }
+  .term-highlight { color: #E6EDF3; }
+  .cursor{
+    display:inline-block;
+    width: 8px; height: 0.95em;
+    background: #3FB950;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .hero-cta{
+    margin-top: 28px;
+    display:flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .btn{
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    padding: 11px 20px;
+    border-radius: var(--radius);
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    transition: transform .18s, background .18s, color .18s, border-color .18s, box-shadow .18s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn.primary{
+    background: var(--accent);
+    color: #0D1117;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .btn.primary:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -6px rgba(63,185,80,0.4);
+    background: #4DD967;
+    border-color: #4DD967;
+  }
+  .btn.ghost{
+    color: var(--ink-soft);
+    background: transparent;
+  }
+  .btn.ghost:hover{
+    background: var(--bg-alt);
+    color: var(--ink);
+    border-color: var(--ink-soft);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section.block{
+    padding: 64px 0;
+    border-top: 1px solid var(--line);
+    position: relative;
+    z-index: 1;
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .section-num{
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 0.82rem;
+    opacity: 0.7;
+  }
+  h2{
+    font-family: var(--mono);
+    font-size: 1.4rem;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .section-sub{
+    color: var(--ink-soft);
+    margin: -22px 0 28px;
+    font-size: 0.92rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+
+  /* ---------- SKELETON ---------- */
+  .skel{
+    position: relative;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .skel::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; top:-40%;
+    height: 40%;
+    background: linear-gradient(to bottom, transparent, rgba(63,185,80,0.12), transparent);
+    animation: scan 1.6s ease-in-out infinite;
+  }
+  @keyframes scan{
+    0%{ top:-40%; }
+    100%{ top: 100%; }
+  }
+  .skel-line{ height: 12px; border-radius: 2px; margin: 8px 0; background: var(--line); }
+  .skel-line.w-60{ width:60%; }
+  .skel-line.w-80{ width:80%; }
+  .skel-line.w-40{ width:40%; }
+  .skel-tag{ height: 28px; width: 96px; border-radius: 999px; display:inline-block; margin: 4px 6px 0 0; background: var(--line); }
+  .skel-card{ height: 156px; }
+
+  .loading-tag{
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .fade-in{
+    animation: fadeIn .5s ease both;
+  }
+  @keyframes fadeIn{
+    from{ opacity:0; transform: translateY(6px); }
+    to{ opacity:1; transform:none; }
+  }
+
+  [hidden]{ display:none !important; }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns: 1fr 280px;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 680px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+  .about-text p{ margin: 0 0 16px; color: var(--ink-soft); }
+  .about-text strong{ color: var(--ink); }
+
+  .about-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+  .about-card .label { color: var(--ink-soft); margin-bottom: 4px; font-size: 0.72rem; }
+  .about-card .value { color: var(--ink); margin-bottom: 14px; }
+  .about-card .value:last-child { margin-bottom: 0; }
+  .status-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 6px;
+    animation: dot-pulse 2s ease infinite;
+  }
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .skill-category {
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: border-color .2s, transform .2s;
+  }
+  .skill-category:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .skill-cat-title {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .tag-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 8px;
+  }
+  .tag{
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    padding: 5px 11px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--ink-soft);
+    transition: border-color .15s, color .15s;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .tag::before{ content:"·"; color: var(--accent); margin-right: 5px; }
+
+  /* ---------- PROJECTS ---------- */
+  .project-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 680px){
+    .project-grid{ grid-template-columns: 1fr; }
+  }
+  .card{
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    text-decoration:none;
+    color: var(--ink);
+    transition: border-color .2s, transform .2s, box-shadow .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s;
+  }
+  .card:hover, .card:focus-visible{
+    border-color: #3FB95066;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px -8px rgba(0,0,0,0.4);
+  }
+  .card:hover::before {
+    transform: scaleX(1);
+  }
+  .card-icon {
+    font-size: 1.1rem;
+  }
+  .card-title{
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+  .card-desc{
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    flex-grow:1;
+    line-height: 1.5;
+  }
+  .card-meta{
+    display:flex;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+    flex-wrap: wrap;
+  }
+  .lang-dot{
+    width:9px; height:9px; border-radius:50%;
+    display:inline-block;
+    background: var(--accent);
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  .project-fallback{
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .project-fallback a{ color: var(--accent); text-decoration: underline; }
+
+  .see-more{
+    margin-top: 24px;
+    text-align:center;
+  }
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  footer{
+    border-top: 1px solid var(--line);
+    padding: 64px 0 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .contact-inner {
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 36px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 0% 0%, rgba(63,185,80,0.06), transparent 60%);
+    pointer-events: none;
+  }
+  .contact-links{
+    display:flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .contact-links a{
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    text-decoration:none;
+    color: var(--ink-soft);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 9px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: color .2s, border-color .2s, transform .2s;
+  }
+  .contact-links a:hover, .contact-links a:focus-visible{
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .copyline{
+    font-family: var(--mono);
+    font-size: 0.73rem;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  /* ---------- SCROLL PROGRESS ---------- */
+  .scroll-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--accent);
+    z-index: 999;
+    transition: width .1s;
+    box-shadow: 0 0 8px rgba(63,185,80,0.6);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Scroll progress bar -->
+<div class="scroll-bar" id="scrollBar"></div>
+
+<nav>
+  <div class="wrap">
+    <span class="logo">tubagus.dev</span>
+    <ul class="navlinks">
+      <li><a href="#about">tentang</a></li>
+      <li><a href="#skills">skill</a></li>
+      <li><a href="#projects">proyek</a></li>
+      <li><a href="#contact">kontak</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-badge">
+      <span class="dot-live"></span>
+      terbuka untuk peluang baru
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="dot r" title="close"></span>
+        <span class="dot y" title="minimize"></span>
+        <span class="dot g" title="maximize"></span>
+        <span class="terminal-title">zsh — ~/portofolio — tubagus@dev</span>
+      </div>
+      <div class="terminal-body" id="terminalBody" aria-live="polite"></div>
+    </div>
+    <div class="hero-cta">
+      <a class="btn primary" href="#projects" id="cta-projects">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        lihat proyek
+      </a>
+      <a class="btn ghost" id="heroGithubLink" href="#" target="_blank" rel="noopener">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        github
+      </a>
+    </div>
+  </div>
+</header>
+
+<section class="block" id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2>Tentang</h2>
+    </div>
+
+    <div id="aboutSkeleton" class="skel" style="padding:20px;">
+      <div class="skel-line w-80"></div>
+      <div class="skel-line w-60"></div>
+      <div class="skel-line w-40"></div>
+    </div>
+
+    <div id="aboutContent" class="about-grid" hidden>
+      <div class="about-text">
+        <p>Halo! Saya <strong id="aboutName"></strong>, seorang <strong id="aboutRole"></strong> yang bersemangat dalam dunia pengembangan perangkat lunak.</p>
+        <p id="aboutBio"></p>
+        <p>Saya percaya bahwa kode yang baik adalah kode yang bisa dipahami oleh orang lain — dan terus belajar adalah kunci untuk berkembang di industri ini.</p>
+      </div>
+      <div class="about-card">
+        <div class="label">// status</div>
+        <div class="value"><span class="status-dot"></span>Aktif mencari peluang</div>
+        <div class="label">// lokasi</div>
+        <div class="value">Indonesia 🇮🇩</div>
+        <div class="label">// fokus</div>
+        <div class="value">Web Development</div>
+        <div class="label">// github</div>
+        <div class="value">@stx-sik</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="skills">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2>Skill</h2>
+    </div>
+    <p class="section-sub">// teknologi yang saya gunakan sehari-hari</p>
+
+    <div id="skillsSkeleton" class="skel" style="padding:20px; min-height:100px;">
+      <span class="skel-tag"></span><span class="skel-tag"></span><span class="skel-tag"></span>
+      <span class="skel-tag"></span><span class="skel-tag"></span>
+    </div>
+
+    <div id="skillsContent" class="skills-grid" hidden></div>
+  </div>
+</section>
+
+<section class="block" id="projects">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2>Proyek dari GitHub</h2>
+    </div>
+    <p class="section-sub">// diambil langsung dari repository publik saya</p>
+
+    <div class="loading-tag" id="projectsLoadingTag">
+      <span>memuat repository<span class="cursor"></span></span>
+    </div>
+
+    <div id="projectsSkeleton" class="project-grid">
+      <div class="skel skel-card"></div>
+      <div class="skel skel-card"></div>
+      <div class="skel skel-card"></div>
+      <div class="skel skel-card"></div>
+    </div>
+
+    <div id="projectsContent" class="project-grid" hidden></div>
+    <div id="projectsFallback" class="project-fallback" hidden></div>
+
+    <div class="see-more">
+      <a class="btn ghost" id="seeAllLink" href="#" target="_blank" rel="noopener">
+        lihat semua repository
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="contact-inner">
+      <div>
+        <div class="hero-badge" style="margin-bottom:12px;">
+          <span class="dot-live"></span>available for hire
+        </div>
+        <h2 style="margin:0; font-size:1.2rem;">Mari Terhubung</h2>
+        <p style="margin:8px 0 0; color:var(--ink-soft); font-size:0.88rem;">Punya proyek menarik atau mau ngobrol? Reach out!</p>
+      </div>
+      <div class="contact-links">
+        <a id="emailLink" href="#">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          email
+        </a>
+        <a id="githubLink" href="#" target="_blank" rel="noopener">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          github
+        </a>
+        <a id="linkedinLink" href="#" target="_blank" rel="noopener">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          linkedin
+        </a>
+      </div>
+    </div>
+    <p class="copyline">© <span id="year"></span> Tubagus Khairul Zaman — dibangun dengan HTML, CSS &amp; JS murni.</p>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   CONFIG — edit bagian ini dengan data kamu
+========================================================= */
+const CONFIG = {
+  name: "Tubagus Khairul Zaman",
+  role: "Junior Programmer",
+  bio: "Saya adalah seorang junior programmer yang antusias dalam mempelajari teknologi baru dan membangun solusi digital yang bermanfaat. Dengan semangat belajar yang tinggi, saya terus mengembangkan kemampuan di bidang pengembangan web sambil mengerjakan berbagai proyek yang menarik.",
+  githubUsername: "stx-sik",
+  email: "tubaguskhairulzaman@gmail.com",
+  linkedinUrl: "https://www.linkedin.com/in/tubagus-khairul-zaman-926aa5372",
+  skillCategories: [
+    {
+      title: "Frontend",
+      skills: ["HTML", "CSS", "JavaScript"]
+    },
+    {
+      title: "Backend",
+      skills: ["Node.js", "PHP"]
+    },
+    {
+      title: "Tools & Lainnya",
+      skills: ["Git", "GitHub", "VS Code"]
+    }
+  ],
+  repoLimit: 6
+};
+
+/* ---------- Init ---------- */
+document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("aboutName").textContent = CONFIG.name;
+document.getElementById("aboutRole").textContent = CONFIG.role;
+document.getElementById("aboutBio").textContent = CONFIG.bio;
+document.getElementById("emailLink").href = "mailto:" + CONFIG.email;
+document.getElementById("githubLink").href = "https://github.com/" + CONFIG.githubUsername;
+document.getElementById("heroGithubLink").href = "https://github.com/" + CONFIG.githubUsername;
+document.getElementById("seeAllLink").href = "https://github.com/" + CONFIG.githubUsername + "?tab=repositories";
+document.getElementById("linkedinLink").href = CONFIG.linkedinUrl;
+
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- Scroll progress bar ---------- */
+window.addEventListener("scroll", () => {
+  const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById("scrollBar").style.width = scrolled + "%";
+});
+
+/* ---------- Terminal boot typewriter ---------- */
+const bootLines = [
+  { type: "cmd", text: "whoami" },
+  { type: "out", text: CONFIG.name + " // " + CONFIG.role },
+  { type: "cmd", text: "cat interests.txt" },
+  { type: "out", text: "Web Development · Problem Solving · Open Source" },
+  { type: "cmd", text: "cat status.txt" },
+  { type: "out", text: "✓ Terbuka untuk peluang & kolaborasi baru." }
+];
+
+function typeBoot(){
+  const body = document.getElementById("terminalBody");
+  body.innerHTML = "";
+
+  if (reduceMotion){
+    bootLines.forEach(line => {
+      const p = document.createElement("p");
+      p.className = "term-line " + (line.type === "cmd" ? "term-prompt" : "term-out");
+      p.textContent = (line.type === "cmd" ? "$ " : "  ") + line.text;
+      body.appendChild(p);
+    });
+    return;
+  }
+
+  let li = 0;
+  function nextLine(){
+    if (li >= bootLines.length) return;
+    const line = bootLines[li];
+    const p = document.createElement("p");
+    p.className = "term-line " + (line.type === "cmd" ? "term-prompt" : "term-out");
+    body.appendChild(p);
+    const prefix = line.type === "cmd" ? "$ " : "  ";
+    let ci = 0;
+    const full = prefix + line.text;
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+
+    function typeChar(){
+      if (ci <= full.length){
+        p.textContent = full.slice(0, ci);
+        p.appendChild(cursor);
+        ci++;
+        setTimeout(typeChar, line.type === "cmd" ? 28 : 10);
+      } else {
+        cursor.remove();
+        li++;
+        setTimeout(nextLine, line.type === "cmd" ? 360 : 200);
+      }
+    }
+    typeChar();
+  }
+  nextLine();
+}
+typeBoot();
+
+/* ---------- Reveal About ---------- */
+setTimeout(() => {
+  document.getElementById("aboutSkeleton").hidden = true;
+  const content = document.getElementById("aboutContent");
+  content.hidden = false;
+  content.classList.add("fade-in");
+}, 900);
+
+/* ---------- Reveal Skills ---------- */
+setTimeout(() => {
+  const skillsContent = document.getElementById("skillsContent");
+  CONFIG.skillCategories.forEach(cat => {
+    const catDiv = document.createElement("div");
+    catDiv.className = "skill-category fade-in";
+    const title = document.createElement("div");
+    title.className = "skill-cat-title";
+    title.textContent = "// " + cat.title;
+    const tagList = document.createElement("div");
+    tagList.className = "tag-list";
+    cat.skills.forEach(skill => {
+      const span = document.createElement("span");
+      span.className = "tag";
+      span.textContent = skill;
+      tagList.appendChild(span);
+    });
+    catDiv.appendChild(title);
+    catDiv.appendChild(tagList);
+    skillsContent.appendChild(catDiv);
+  });
+  document.getElementById("skillsSkeleton").hidden = true;
+  skillsContent.hidden = false;
+}, 1200);
+
+/* ---------- GitHub projects ---------- */
+const langColors = {
+  JavaScript: "#F1E05A",
+  TypeScript: "#3178C6",
+  Python: "#3572A5",
+  HTML: "#E34C26",
+  CSS: "#563D7C",
+  PHP: "#4F5D95",
+  "C++": "#F34B7D",
+  Java: "#B07219",
+  Go: "#00ADD8",
+  Rust: "#DEA584",
+  Vue: "#41B883",
+  default: "#3FB950"
+};
+
+async function loadProjects(){
+  const skeleton = document.getElementById("projectsSkeleton");
+  const loadingTag = document.getElementById("projectsLoadingTag");
+  const content = document.getElementById("projectsContent");
+  const fallback = document.getElementById("projectsFallback");
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/users/${CONFIG.githubUsername}/repos?sort=updated&per_page=${CONFIG.repoLimit}`
+    );
+    if (!res.ok) throw new Error("Gagal memuat: " + res.status);
+    const repos = await res.json();
+
+    if (!Array.isArray(repos) || repos.length === 0){
+      throw new Error("Tidak ada repository publik ditemukan.");
+    }
+
+    repos.forEach((repo, idx) => {
+      const card = document.createElement("a");
+      card.className = "card fade-in";
+      card.href = repo.html_url;
+      card.target = "_blank";
+      card.rel = "noopener";
+      card.style.animationDelay = (idx * 60) + "ms";
+      card.setAttribute("aria-label", "Buka repository " + repo.name);
+
+      const title = document.createElement("div");
+      title.className = "card-title";
+      title.innerHTML = `<svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" style="opacity:0.5"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>` + repo.name;
+
+      const desc = document.createElement("div");
+      desc.className = "card-desc";
+      desc.textContent = repo.description || "Tidak ada deskripsi.";
+
+      const meta = document.createElement("div");
+      meta.className = "card-meta";
+      const color = repo.language ? (langColors[repo.language] || langColors.default) : null;
+      const lang = color ? `<span><span class="lang-dot" style="background:${color}"></span>${repo.language}</span>` : "";
+      const fork = repo.fork ? `<span style="color:#F0883E">fork</span>` : "";
+      meta.innerHTML = `${lang}<span>★ ${repo.stargazers_count}</span>${fork}`;
+
+      card.appendChild(title);
+      card.appendChild(desc);
+      card.appendChild(meta);
+      content.appendChild(card);
+    });
+
+    skeleton.hidden = true;
+    loadingTag.hidden = true;
+    content.hidden = false;
+  } catch (err) {
+    skeleton.hidden = true;
+    loadingTag.hidden = true;
+    fallback.hidden = false;
+    fallback.innerHTML = `<strong>Tidak bisa memuat proyek sekarang</strong> (${err.message}).<br>Kunjungi langsung
+      <a href="https://github.com/${CONFIG.githubUsername}" target="_blank" rel="noopener">profil GitHub saya →</a>`;
+  }
+}
+
+setTimeout(loadProjects, 700);
+</script>
+
+</body>
+</html>
